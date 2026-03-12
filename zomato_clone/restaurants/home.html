@@ -1,10 +1,209 @@
-<h1>🍴 Zomato Clone</h1>
-
-{% for restaurant in restaurants %}
-    <div>
-        <h2>{{ restaurant.name }}</h2>
-        <p>{{ restaurant.location }}</p>
-        <p>⭐ {{ restaurant.rating }}</p>
-        <hr>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zomato Clone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ef4f5f 0%, #f75c4a 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .restaurants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .restaurant-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .restaurant-image {
+            width: 100%;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            overflow: hidden;
+        }
+        
+        .restaurant-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .restaurant-info {
+            padding: 1.5rem;
+        }
+        
+        .restaurant-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        
+        .restaurant-location {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .restaurant-rating {
+            color: #ef4f5f;
+            font-weight: bold;
+        }
+        
+        .food-items-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #ddd;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .food-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .food-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        .food-image {
+            width: 100%;
+            height: 180px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            overflow: hidden;
+        }
+        
+        .food-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .food-info {
+            padding: 1rem;
+        }
+        
+        .food-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .food-price {
+            font-size: 1rem;
+            color: #ef4f5f;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🍕 Zomato Clone 🍔</h1>
+        <p>Delicious food delivered to your door</p>
     </div>
-{% endfor %}
+    
+    <div class="container">
+        <h2 class="section-title">🏪 Popular Restaurants</h2>
+        <div class="restaurants-grid">
+            {% for restaurant in restaurants %}
+                <div class="restaurant-card">
+                    <div class="restaurant-image">
+                        {% if restaurant.image %}
+                            <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}">
+                        {% else %}
+                            🏪
+                        {% endif %}
+                    </div>
+                    <div class="restaurant-info">
+                        <div class="restaurant-name">{{ restaurant.name }}</div>
+                        <div class="restaurant-location">📍 {{ restaurant.location }}</div>
+                        <div class="restaurant-rating">⭐ {{ restaurant.rating }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="food-items-section">
+            <h2 class="section-title">🍜 Popular Food Items</h2>
+            <div class="food-grid">
+                {% for food in food_items %}
+                    <div class="food-card">
+                        <div class="food-image">
+                            {% if food.image %}
+                                <img src="{{ food.image.url }}" alt="{{ food.name }}">
+                            {% else %}
+                                🍽️
+                            {% endif %}
+                        </div>
+                        <div class="food-info">
+                            <div class="food-name">{{ food.name }}</div>
+                            <div style="color: #999; font-size: 0.9rem; margin-bottom: 0.5rem;">{{ food.restaurant.name }}</div>
+                            <div class="food-price">₹{{ food.price }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

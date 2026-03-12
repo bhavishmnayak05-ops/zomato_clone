@@ -13,3 +13,6 @@ class Order(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def get_subtotal(self):
+        return self.food_item.price * self.quantity

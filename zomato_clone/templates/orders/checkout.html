@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - Zomato Clone{% endblock %}
+
+{% block extra_css %}
+<style>
+    .checkout-container {
+        max-width: 800px;
+        margin: 2rem auto;
+    }
+
+    .checkout-card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .checkout-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #ef4f5f;
+    }
+
+    .checkout-header h2 {
+        margin: 0;
+        color: #333;
+    }
+
+    .icon {
+        font-size: 2rem;
+        color: #ef4f5f;
+    }
+
+    .order-items {
+        margin-bottom: 2rem;
+    }
+
+    .order-item {
+        display: grid;
+        grid-template-columns: 1fr 100px 100px;
+        gap: 1rem;
+        padding: 1rem;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
+
+    .item-name {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .item-price {
+        text-align: right;
+        color: #ef4f5f;
+        font-weight: bold;
+    }
+
+    .summary-info {
+        background-color: #f0f0f0;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: #666;
+    }
+
+    .summary-row.total {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #333;
+        border-top: 2px solid #ddd;
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+
+    .summary-row.total .price {
+        color: #ef4f5f;
+    }
+
+    .price {
+        text-align: right;
+    }
+
+    .delivery-address {
+        background-color: #e8f4f8;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border-left: 4px solid #17a2b8;
+        margin-bottom: 2rem;
+    }
+
+    .delivery-address h4 {
+        margin: 0 0 0.5rem 0;
+        color: #333;
+    }
+
+    .delivery-address p {
+        margin: 0;
+        color: #666;
+    }
+
+    .payment-method {
+        background-color: #f9f9f9;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+    }
+
+    .payment-method h4 {
+        margin: 0 0 1rem 0;
+        color: #333;
+    }
+
+    .radio-group {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .radio-option {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .radio-option input {
+        cursor: pointer;
+    }
+
+    .checkout-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .cancel-btn {
+        padding: 0.75rem 1.5rem;
+        background-color: #ddd;
+        color: #333;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+
+    .cancel-btn:hover {
+        background-color: #ccc;
+    }
+
+    .place-order-btn {
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #ef4f5f 0%, #f75c4a 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: opacity 0.3s;
+    }
+
+    .place-order-btn:hover {
+        opacity: 0.9;
+    }
+
+    .place-order-btn:active {
+        transform: scale(0.98);
+    }
+
+    .security-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #28a745;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        text-align: center;
+        justify-content: center;
+    }
+
+    @media (max-width: 600px) {
+        .order-item {
+            grid-template-columns: 1fr;
+        }
+
+        .checkout-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .summary-row {
+            flex-direction: column;
+        }
+
+        .price {
+            text-align: left;
+        }
+    }
+
+    .confirmation-banner {
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.95) 0%, rgba(32, 142, 58, 0.95) 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .confirmation-banner h3 {
+        margin: 0 0 1rem 0;
+        font-size: 1.3rem;
+    }
+
+    .confirmation-banner i {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .order-success-message {
+        background: #efe;
+        border: 1px solid #cfc;
+        border-left: 4px solid #28a745;
+        color: #155724;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+    <div class="confirmation-banner">
+        <i class="fas fa-check-circle"></i>
+        <h3>Ready to Place Your Order?</h3>
+        <p>Review your items, delivery details, and payment method below</p>
+    </div>
+
+    <div class="checkout-card">
+        <div class="checkout-header">
+            <div class="icon"><i class="fas fa-check-circle"></i></div>
+            <h2>Order Summary</h2>
+        </div>
+        
+        <div class="order-items">
+            {% for order in orders %}
+                <div class="order-item">
+                    <div>
+                        <div class="item-name">{{ order.food_item.name }}</div>
+                        <small style="color: #999;">{{ order.food_item.restaurant.name }}</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <span class="quantity-badge">{{ order.quantity }}x</span>
+                    </div>
+                    <div class="item-price">₹{{ order.get_subtotal }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="checkout-card">
+        <div class="checkout-header">
+            <div class="icon"><i class="fas fa-rupee-sign"></i></div>
+            <h2>Price Breakdown</h2>
+        </div>
+        
+        <div class="summary-info">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span class="price">₹{{ total_price }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Delivery Fee:</span>
+                <span class="price">₹{{ delivery_fee }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Tax (5%):</span>
+                <span class="price">₹{{ tax }}</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total Amount:</span>
+                <span class="price">₹{{ final_total }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-card">
+        <div class="checkout-header">
+            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+            <h2>Delivery Details</h2>
+        </div>
+        
+        <div class="delivery-address">
+            <h4><i class="fas fa-home"></i> Delivery Address</h4>
+            <p>Default delivery address - {{ user.first_name }} {{ user.last_name }}</p>
+        </div>
+    </div>
+
+    <div class="checkout-card">
+        <div class="checkout-header">
+            <div class="icon"><i class="fas fa-credit-card"></i></div>
+            <h2>Payment Method</h2>
+        </div>
+        
+        <div class="payment-method">
+            <h4>Select Payment Method:</h4>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" id="cash" name="payment" value="cash" checked>
+                    <label for="cash">Cash on Delivery</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="card" name="payment" value="card">
+                    <label for="card">Debit/Credit Card</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-card">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="checkout-actions">
+                <a href="{% url 'my_orders' %}" class="cancel-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Cart
+                </a>
+                <button type="submit" class="place-order-btn">
+                    <i class="fas fa-shopping-bag"></i> Place Order
+                </button>
+            </div>
+            <div class="security-badge">
+                <i class="fas fa-lock"></i> Secure Checkout
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

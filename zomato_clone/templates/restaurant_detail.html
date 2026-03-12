@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ restaurant.name }} - Zomato Clone{% endblock %}
+
+{% block extra_css %}
+<style>
+    .restaurant-header {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .restaurant-banner {
+        width: 100%;
+        height: 300px;
+        background-color: #ddd;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        overflow: hidden;
+    }
+
+    .restaurant-banner img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .restaurant-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .restaurant-details > div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .restaurant-details h2 {
+        font-size: 2rem;
+        color: #333;
+        margin: 0;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #666;
+    }
+
+    .rating-badge {
+        background-color: #ef4f5f;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-weight: bold;
+        display: inline-block;
+        width: fit-content;
+    }
+
+    .menu-section {
+        margin-top: 2rem;
+    }
+
+    .menu-section h3 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #ef4f5f;
+        padding-bottom: 0.5rem;
+    }
+
+    .food-items-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .food-item-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+
+    .food-item-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+
+    .food-item-image {
+        width: 100%;
+        height: 180px;
+        background-color: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        overflow: hidden;
+    }
+
+    .food-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .food-item-info {
+        padding: 1rem;
+    }
+
+    .food-item-name {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .food-item-price {
+        font-size: 1.2rem;
+        color: #ef4f5f;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .add-form {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .quantity-input {
+        width: 60px;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .add-btn {
+        flex: 1;
+        padding: 0.5rem;
+        background: linear-gradient(135deg, #ef4f5f 0%, #f75c4a 100%);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: opacity 0.3s;
+    }
+
+    .add-btn:hover {
+        opacity: 0.9;
+    }
+
+    .no-items {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #ef4f5f;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: bold;
+    }
+
+    .back-btn:hover {
+        text-decoration: underline;
+    }
+
+    .restaurant-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #ef4f5f 0%, #f75c4a 100%);
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        box-shadow: 0 3px 10px rgba(239, 79, 95, 0.3);
+    }
+
+    .badge i {
+        font-size: 1rem;
+    }
+
+    .empty-menu {
+        text-align: center;
+        padding: 3rem;
+        background: #f9f9f9;
+        border-radius: 10px;
+        color: #666;
+    }
+
+    .empty-menu i {
+        font-size: 3rem;
+        color: #ccc;
+        margin-bottom: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'home' %}" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Restaurants</a>
+
+<div class="restaurant-header">
+    <div class="restaurant-banner">
+        {% if restaurant.image %}
+            <img src="{{ restaurant.image.url }}" alt="{{ restaurant.name }}" onerror="this.parent.style.background='#ddd'">
+        {% else %}
+            <i class="fas fa-utensils"></i>
+        {% endif %}
+    </div>
+    
+    <div class="restaurant-details">
+        <div>
+            <h2>{{ restaurant.name }}</h2>
+            <div class="detail-item">
+                <i class="fas fa-map-pin"></i>
+                <span>{{ restaurant.location }}</span>
+            </div>
+        </div>
+        <div>
+            <div class="rating-badge">
+                <i class="fas fa-star"></i> {{ restaurant.rating }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Restaurant Badges -->
+    <div class="restaurant-badges">
+        <div class="badge">
+            <i class="fas fa-clock"></i> 30 mins
+        </div>
+        <div class="badge">
+            <i class="fas fa-truck"></i> Free Delivery
+        </div>
+        <div class="badge">
+            <i class="fas fa-check-circle"></i> Verified
+        </div>
+    </div>
+</div>
+
+<div class="menu-section">
+    <h3><i class="fas fa-list"></i> Menu</h3>
+    
+    {% if food_items %}
+        <div class="food-items-grid">
+            {% for item in food_items %}
+                <div class="food-item-card">
+                    <div class="food-item-image">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}" onerror="this.parent.style.background='#ddd'">
+                        {% else %}
+                            <i class="fas fa-utensils"></i>
+                        {% endif %}
+                    </div>
+                    <div class="food-item-info">
+                        <div class="food-item-name">{{ item.name }}</div>
+                        <div class="food-item-price">₹{{ item.price }}</div>
+                        
+                        {% if user.is_authenticated %}
+                            <form method="POST" action="{% url 'add_to_order' item.id %}" class="add-form">
+                                {% csrf_token %}
+                                <input type="number" name="quantity" min="1" value="1" class="quantity-input">
+                                <button type="submit" class="add-btn">
+                                    <i class="fas fa-plus"></i> Add
+                                </button>
+                            </form>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="add-btn" style="display: block; text-align: center; text-decoration: none;">
+                                Login to Order
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-menu">
+            <i class="fas fa-inbox"></i>
+            <h3>No Menu Items Yet</h3>
+            <p>This restaurant doesn't have any items available at the moment.<br>Please check back later!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

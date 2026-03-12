@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Zomato Clone{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        min-height: 100vh;
+    }
+
+    .auth-container {
+        max-width: 500px;
+        margin: 2rem auto;
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .auth-header h2 {
+        color: #333;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-header p {
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #333;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+        background: #f9f9f9;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #f5576c;
+        background: white;
+        box-shadow: 0 5px 15px rgba(245, 87, 108, 0.2);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+    }
+
+    .submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .auth-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #666;
+        font-size: 0.95rem;
+    }
+
+    .auth-link a {
+        color: #f5576c;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+
+    .auth-link a:hover {
+        color: #f093fb;
+        text-decoration: underline;
+    }
+
+    .password-requirements {
+        background: #f0f8ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.85rem;
+        color: #333;
+    }
+
+    .password-requirements h4 {
+        margin: 0 0 0.5rem 0;
+        color: #555;
+        font-size: 0.9rem;
+    }
+
+    .password-requirements ul {
+        margin: 0;
+        padding-left: 1.5rem;
+    }
+
+    .password-requirements li {
+        margin-bottom: 0.3rem;
+    }
+
+    .error-messages {
+        background: #fee;
+        border: 1px solid #fcc;
+        color: #c33;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #f5576c;
+    }
+
+    .error-messages ul {
+        margin: 0;
+        padding: 0 0 0 1.5rem;
+    }
+
+    .success-messages {
+        background: #efe;
+        border: 1px solid #cfc;
+        color: #3c3;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #28a745;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-header">
+        <div style="font-size: 2.5rem; margin-bottom: 1rem;">👨‍💼</div>
+        <h2>Create Your Account</h2>
+        <p>Join millions enjoying delicious food</p>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "error" %}
+                <div class="error-messages">
+                    <ul>
+                        <li>{{ message }}</li>
+                    </ul>
+                </div>
+            {% elif message.tags == "success" %}
+                <div class="success-messages">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="username">
+                <i class="fas fa-user"></i> Username
+            </label>
+            <input type="text" id="username" name="username" placeholder="Choose a username" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">
+                <i class="fas fa-envelope"></i> Email Address
+            </label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">
+                <i class="fas fa-lock"></i> Password
+            </label>
+            <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+        </div>
+
+        <div class="password-requirements">
+            <h4>Password Requirements:</h4>
+            <ul>
+                <li>At least 8 characters long</li>
+                <li>Mix of uppercase and lowercase letters</li>
+                <li>At least one number or special character</li>
+            </ul>
+        </div>
+        
+        <div class="form-group">
+            <label for="password_confirm">
+                <i class="fas fa-check-circle"></i> Confirm Password
+            </label>
+            <input type="password" id="password_confirm" name="password_confirm" placeholder="Re-enter your password" required>
+        </div>
+        
+        <button type="submit" class="submit-btn">
+            <i class="fas fa-user-plus"></i> Create Account
+        </button>
+    </form>
+    
+    <div class="auth-link">
+        Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+    </div>
+</div>
+{% endblock %}
